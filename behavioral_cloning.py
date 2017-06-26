@@ -71,16 +71,6 @@ model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5)
 
 model.save('model.h5')
 
-################################################################ 
-# Save the model and weights 
-################################################################ 
-model_json = model.to_json() 
-with open("./model_2.json", "w") as json_file: 
-    json.dump(model_json, json_file) 
-model.save_weights("./model_2.h5") 
-print("Saved model to disk")
-##############################################################
-
 history_object = model.fit_generator(train_generator, samples_per_epoch =
     len(train_samples), validation_data = 
     validation_generator,
