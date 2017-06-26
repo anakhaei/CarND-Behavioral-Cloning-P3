@@ -29,7 +29,7 @@ def preprocess_image(img):
     1- Crop image
     2- Resize the image
     """
-    img = img[50:140, 0:320]
+    #img = img[50:140, 0:320]
     #img = cv2.resize(img, (IMAGE_W, IMAGE_H))
     return img
 
@@ -82,17 +82,18 @@ def load_data(folder_path):
 
 def create_nvidia_model():
     model = Sequential()
-    model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(90, 320, 3)))
+    model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160, 320, 3)))
+    model.add(Cropping2D(cropping=((70,25), (0,0))))
     model.add(Convolution2D(6, 5, 5, activation="relu"))
     model.add(MaxPooling2D())
     model.add(Convolution2D(6, 5, 5, activation="relu"))
     model.add(MaxPooling2D())
     model.add(Convolution2D(6, 5, 5, activation="relu"))
     model.add(MaxPooling2D())
-    model.add(Convolution2D(6, 3, 3, activation="relu"))
-    model.add(MaxPooling2D())
-    model.add(Convolution2D(6, 3, 3, activation="relu"))
-    model.add(MaxPooling2D())
+#    model.add(Convolution2D(6, 3, 3, activation="relu"))
+#    model.add(MaxPooling2D())
+#    model.add(Convolution2D(6, 3, 3, activation="relu"))
+#    model.add(MaxPooling2D())
     model.add(Flatten())
     model.add(Dense(1164))
     model.add(Dense(100))
