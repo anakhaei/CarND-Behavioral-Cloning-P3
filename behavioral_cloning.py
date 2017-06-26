@@ -42,42 +42,6 @@ for line in lines:
     images.append (np.fliplr(image_right))
     measurements.append(-1 * (measurement-correction))
 
-lines = []
-with open ('../run-1/driving_log.csv') as csvfile:
-    reader = csv.reader(csvfile)
-    for line in reader:
-        lines.append(line)
-
-for line in lines:
-    source_path_center = line[0]
-    source_path_left = line[1]
-    source_path_right = line[2]
-    filename_center = source_path_center.split('/')[-1]
-    filename_left = source_path_left.split('/')[-1]
-    filename_right = source_path_right.split('/')[-1]
-
-    image_center = cv2.imread('../run-1/IMG/' + filename_center)
-    image_left = cv2.imread('../run-1/IMG/' + filename_left)
-    image_right = cv2.imread('../run-1/IMG/' + filename_right)
-    
-    measurement = float(line[3])
-    images.append (image_center)
-    measurements.append(measurement)
-    images.append (image_left)
-    measurements.append(measurement+correction)
-    images.append (image_right)
-    measurements.append(measurement-correction)
-
-    images.append (np.fliplr(image_center))
-    measurements.append(-1 * measurement)
-
-    images.append (np.fliplr(image_left))
-    measurements.append(-1 * (measurement+correction))
-
-    images.append (np.fliplr(image_right))
-    measurements.append(-1 * (measurement-correction))
-
-
 X_train=np.array(images)
 y_train=np.array(measurements) 
 
