@@ -1,8 +1,5 @@
 #**Behavioral Cloning** 
 
-##Writeup Template
-
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
 
 ---
 
@@ -38,92 +35,67 @@ My project includes the following files:
 * model.py containing the script to create and train the model
 * drive.py for driving the car in autonomous mode
 * model.h5 containing a trained convolution neural network 
-* writeup_report.md or writeup_report.pdf summarizing the results
+* writeup_report.md summarizing the results
 
-####2. Submission includes functional code
-Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
-```sh
-python drive.py model.h5
-```
+## Model Architecture and Training Strategy
+### Exploring the Training Set
 
-####3. Submission code is usable and readable
+#### Training Set
+I have used the training set provided by udacity for the first track. Also I captured data by driving in the first Track. Udacity provided 28056 frames (including center, right and left camera) and I have added almost 28000 frames to it.
 
-The model.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
+I have used 2 strategies in collecting data:
+1- Driving at the center of the lane by using mouse: Althought it was easier to use keyboard, but steering commands from keyboard don't seem to be continues or they jump from 0 to Max or Min value very quickly. However, changes in steering commands from mouse are smooth.
 
-###Model Architecture and Training Strategy
+2- I have added many frames starting from the corner of the lane and moving the car toward th ecenter of the lane. These frame were mainly captured to help the network to learn how get back to the center of the lane.
 
-####1. An appropriate model architecture has been employed
-
-My model consists of a convolution neural network with 3x3 filter sizes and depths between 32 and 128 (model.py lines 18-24) 
-
-The model includes RELU layers to introduce nonlinearity (code line 20), and the data is normalized in the model using a Keras lambda layer (code line 18). 
-
-####2. Attempts to reduce overfitting in the model
-
-The model contains dropout layers in order to reduce overfitting (model.py lines 21). 
-
-The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 10-16). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
-
-####3. Model parameter tuning
-
-The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 25).
-
-####4. Appropriate training data
-
-Training data was chosen to keep the vehicle driving on the road. I used a combination of center lane driving, recovering from the left and right sides of the road ... 
-
-For details about how I created the training data, see the next section. 
-
-###Model Architecture and Training Strategy
-
-####1. Solution Design Approach
-
-The overall strategy for deriving a model architecture was to ...
-
-My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
-
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
-
-To combat the overfitting, I modified the model so that ...
-
-Then I ... 
-
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
-
-At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
-
-####2. Final Model Architecture
-
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
-
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
-
-![alt text][image1]
-
-####3. Creation of the Training Set & Training Process
-
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
-
-![alt text][image2]
-
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
-
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
-
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
-
-After the collection process, I had X number of data points. I then preprocessed this data by ...
+NOTE: An important point is that cv2 images should be converted to RGB by using COLOR_BGR2RGB. 
 
 
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
+#### Right and Left Camera
+I have also used images from right and left cameras by applying a correction factor to the steering value. I tried several settings for the correction factor and 0.3 gave a good result.
 
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+#### Data Augmentation
+I haved flipped all the frames as recommended during the course to train my network in a generalized situation (Turining right and left).
+
+###M Data Preprocessing
+I used two strategies to preprocess the training data set:
+1- Normalization: I normalized all the training sets by by using keras.layers.lamda as recomended in the corse
+2- Image cropping: I cropped the top and bottom of the frames (70 rows from the top and 25 rows from the bottom) to get rid of the distracting pixels. I have also explored the idea of reshaping/rescaling the image to 50x50 (in cv2), but it didn't result in any improvement even if it seems to be a better input, so I removed the reshaping and rescaling block.
+
+I have noticed that some people preprocess the steering values as well since they might have two much jittering in their numbers. Since I used mouse to capture training data set, I beleave that my steering numbers are quite smooth so I didn't apply any filter on steering values. 
+
+#### Validation Set
+I finally randomly shuffled the data set and put 20% of the data into a validation set. I used this training data for training the model. The validation set helped determine if the model was over or under fitting. 
+
+### Model Architecture
+I have started with an Architecture similar to NVIDIA paper and I fine tune it. I used 5 epochs since after that I didn't see that much improvement. Here is the architecture that I finaly used:
+
+##### Preprocessing Layer:
+* Layer 1: Lambda for Normalization. Input = 160x320x3. Output = 160x320x3
+* Layer 1:Cropping2D. Input = 160x320x3. Output = 65x320x3
+
+
+
+##### Layers
+* Layer 1: Convolutional. (6, 5, 5) 
+* Activation: Relu
+* MaxPooling2D 
+* Layer 2: Convolutional. (6, 5, 5) 
+* Activation: Relu
+* MaxPooling2D 
+* Layer 3: Convolutional. (6, 5, 5) 
+* Activation: Relu
+* MaxPooling2D 
+* Flatten 
+* Layer 4: Dense (1164) 
+* Layer 5: Dense (100) 
+* Layer 6: Dense (50) 
+* Layer 7: Dense (10) 
+* Layer 8: Dense (1) 
+
+### Results
+I have tested the result of the training in the simulation and driving is quite smooth on the fist track. Initially, I set the speed to 9 (default speed) and it worked well. The result is still smooth if you increase the speed to 20. 
+
+As A future work, I will train the same network on Track 2 to check it's performance.
+
+
