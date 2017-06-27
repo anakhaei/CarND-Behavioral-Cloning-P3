@@ -14,21 +14,6 @@ X_train = np.array(images)
 y_train = np.array(measurements)
 
 
-#model = Sequential()
-#model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=(160, 320, 3)))
-#model.add(Convolution2D(6, 5, 5, activation="relu"))
-#model.add(MaxPooling2D())
-#model.add(Convolution2D(6, 5, 5, activation="relu"))
-#model.add(MaxPooling2D())
-#model.add(Convolution2D(6, 5, 5, activation="relu"))
-#model.add(MaxPooling2D())
-#model.add(Flatten())
-#model.add(Dense(1024))
-#model.add(Dense(1024))
-#model.add(Dense(120))
-#model.add(Dense(84))
-#model.add(Dense(1))
-
 model= utils.create_nvidia_model()
 
 model.compile(loss='mse', optimizer='adam')
