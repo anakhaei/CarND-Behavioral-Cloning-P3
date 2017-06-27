@@ -3,7 +3,7 @@
 
 ---
 
-**Behavioral Cloning Project**
+## Behavioral Cloning Project
 
 The goals / steps of this project are the following:
 * Use the simulator to collect data of good driving behavior
@@ -23,35 +23,43 @@ The goals / steps of this project are the following:
 [image6]: ./examples/placeholder_small.png "Normal Image"
 [image7]: ./examples/placeholder_small.png "Flipped Image"
 
-## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
+
 
 ---
-###Files Submitted & Code Quality
-
-####1. Submission includes all required files and can be used to run the simulator in autonomous mode
 
 My project includes the following files:
-* model.py containing the script to create and train the model
+
+* utills.py including the collection of functions that I used. 
+* behavioral_cloning.py containing the script to create and train the model 
 * drive.py for driving the car in autonomous mode
 * model.h5 containing a trained convolution neural network 
-* writeup_report.md summarizing the results
+* writeup.md summarizing the results
 
 ## Model Architecture and Training Strategy
+
 ### Exploring the Training Set
 
 #### Training Set
 I have used the training set provided by udacity for the first track. Also I captured data by driving in the first Track. Udacity provided 28056 frames (including center, right and left camera) and I have added almost 28000 frames to it.
 
 I have used 2 strategies in collecting data:
+
 1- Driving at the center of the lane by using mouse: Althought it was easier to use keyboard, but steering commands from keyboard don't seem to be continues or they jump from 0 to Max or Min value very quickly. However, changes in steering commands from mouse are smooth.
 
 2- I have added many frames starting from the corner of the lane and moving the car toward th ecenter of the lane. These frame were mainly captured to help the network to learn how get back to the center of the lane.
 
 NOTE: An important point is that cv2 images should be converted to RGB by using COLOR_BGR2RGB. 
 
+<p align="center">
+ <a href="examples/data_set.png" target="_blank"><img src="examples/data_set.png" width="800" style="max-width:100%;"></a>
+</p>
 
-#### Right and Left Camera
+<p align="center">
+ <a href="examples/recovery.png" target="_blank"><img src="examples/recovery.png" width="400" style="max-width:100%;"></a>
+</p>
+
+
+#### Right and Left Cameras
 I have also used images from right and left cameras by applying a correction factor to the steering value. I tried several settings for the correction factor and 0.3 gave a good result.
 
 #### Data Augmentation
@@ -64,8 +72,13 @@ I used two strategies to preprocess the training data set:
 
 I have noticed that some people preprocess the steering values as well since they might have two much jittering in their numbers. Since I used mouse to capture training data set, I beleave that my steering numbers are quite smooth so I didn't apply any filter on steering values. 
 
+<p align="center">
+ <a href="examples/steering.png" target="_blank"><img src="examples/streeing.png" width="400" style="max-width:100%;"></a>
+</p>
+
+
 #### Validation Set
-I finally randomly shuffled the data set and put 20% of the data into a validation set. I used this training data for training the model. The validation set helped determine if the model was over or under fitting. 
+I finally, randomly shuffled the data set and put 20% of the data into a validation set. I used this training data for training the model. The validation set helped determine if the model was over or under fitting. 
 
 ### Model Architecture
 I have started with an Architecture similar to NVIDIA paper and I fine tune it. I used 5 epochs since after that I didn't see that much improvement. Here is the architecture that I finaly used:
