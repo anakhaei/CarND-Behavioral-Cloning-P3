@@ -82,7 +82,11 @@ I have noticed that some people preprocess the steering values as well since the
 I finally, randomly shuffled the data set and put 20% of the data into a validation set. I used this training data for training the model. The validation set helped determine if the model was over or under fitting. 
 
 ### Model Architecture
-I have started with an Architecture similar to NVIDIA paper and I fine tune it. I used 5 epochs since after that I didn't see that much improvement. Here is the architecture that I finaly used:
+I have started with an Architecture similar to NVIDIA paper and I fine tuned it. Intially I trained my network with only center camera of Udacity data set. I also removed some of the convolutional layesr to keep more pixels before my fully connected layer. The model was not able to handle the turn before the bridge. Then I intoduced the images from left and right cameras with the correction of 0.1. Probbaly the correction was not enough to prevent the car going out of the lane.
+
+I introduced two changes at the same time so it is now difficault the judje te impact of each of them. I increased the correction and also augmented the data set by flipping them. It was a major improvement, but still not good enough to handle all the turns. At this point, I added my own data set by driving 2 laps plus several recovery cases from right and left. At this time, I got a good result with smooth manouvers. I tested it with the velocity of 10 and 20 it performed quite well. No success at the velocity of 30!  
+
+I used 5 epochs since and after that I didn't see that much improvement. Here is the architecture that I finaly used:
 
 ##### Preprocessing Layer:
 * Layer 1: Lambda for Normalization. Input = 160x320x3. Output = 160x320x3
