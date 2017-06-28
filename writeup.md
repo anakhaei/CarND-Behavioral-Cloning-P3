@@ -65,15 +65,16 @@ I have also used images from right and left cameras by applying a correction fac
 #### Data Augmentation
 I haved flipped all the frames as recommended during the course to train my network in a generalized situation (Turining right and left).
 
-###M Data Preprocessing
+### Data Preprocessing
 I used two strategies to preprocess the training data set:
-1- Normalization: I normalized all the training sets by by using keras.layers.lamda as recomended in the corse
-2- Image cropping: I cropped the top and bottom of the frames (70 rows from the top and 25 rows from the bottom) to get rid of the distracting pixels. I have also explored the idea of reshaping/rescaling the image to 50x50 (in cv2), but it didn't result in any improvement even if it seems to be a better input, so I removed the reshaping and rescaling block.
+
+* 1- Normalization: I normalized all the training sets by by using keras.layers.lamda as recomended in the corse
+* 2- Image cropping: I cropped the top and bottom of the frames (70 rows from the top and 25 rows from the bottom) to get rid of the distracting pixels. I have also explored the idea of reshaping/rescaling the image to 50x50 (in cv2), but it didn't result in any improvement even if it seems to be a better input, so I removed the reshaping and rescaling block.
 
 I have noticed that some people preprocess the steering values as well since they might have two much jittering in their numbers. Since I used mouse to capture training data set, I beleave that my steering numbers are quite smooth so I didn't apply any filter on steering values. 
 
 <p align="center">
- <a href="examples/steering.png" target="_blank"><img src="examples/streeing.png" width="400" style="max-width:100%;"></a>
+ <a href="examples/steering.png" target="_blank"><img src="examples/steering.png" width="800" style="max-width:100%;"></a>
 </p>
 
 
@@ -107,7 +108,15 @@ I have started with an Architecture similar to NVIDIA paper and I fine tune it. 
 * Layer 8: Dense (1) 
 
 ### Results
-I have tested the result of the training in the simulation and driving is quite smooth on the fist track. Initially, I set the speed to 9 (default speed) and it worked well. The result is still smooth if you increase the speed to 20. 
+I have tested the result of the training in the simulation and driving is quite smooth on the fist track. Initially, I set the speed to 9 (default speed) and it worked well. The result is still smooth if you increase the speed to 20. The video in the folder captured at the velocity of 10.
+
+### Leasson learned
+  * Number of data set: It is important to use higher number of data set. Only by using the data set provided by udacity, I couldn't train th enetwork. Actually, I am not sure about the quality of the data.
+  * GPU: It was my first time running that I trained a network on GPU and CPU so I could compare teh training speed. I certainly helped alot.
+  * Existing Architecture: For the begineers, it's a good practice to start from an existing network and then fine tune it base on the application.
+  * Recovery data set: Adding recovery from left and right corners was very helpfull. 
+ 
+
 
 As A future work, I will train the same network on Track 2 to check it's performance.
 
